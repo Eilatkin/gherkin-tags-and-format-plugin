@@ -1,0 +1,6 @@
+[
+	{ 
+		"caption": "Transpose Gherkin Table",
+		"command": "transpose_gherkin_table",
+	}
+]
