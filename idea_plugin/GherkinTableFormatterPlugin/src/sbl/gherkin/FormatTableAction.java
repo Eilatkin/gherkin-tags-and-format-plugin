@@ -8,6 +8,8 @@ import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.util.TextRange;
 
+import java.util.Optional;
+
 public class FormatTableAction extends EditorAction {
 
     public FormatTableAction(EditorActionHandler defaultHandler) {
@@ -25,7 +27,7 @@ public class FormatTableAction extends EditorAction {
             TextRange range = EditorHelper.getSelectedLines(editor);
             String text = EditorHelper.getTextForRange(editor, range);
 
-            isActionEnabled = GherkinTable.isTable(text);
+            isActionEnabled = GherkinTable.tryParse(text).isPresent();
         }
 
         presentation.setEnabled(isActionEnabled);
@@ -45,13 +47,15 @@ public class FormatTableAction extends EditorAction {
             TextRange range = EditorHelper.getSelectedLines(editor);
             String tableText = EditorHelper.getTextForRange(editor, range);
 
-            GherkinTable table = GherkinTable.tryParse(tableText);
-            // TODO: AA: handle null-value when parsing failed
+            Optional<GherkinTable> table = GherkinTable.tryParse(tableText);
+            if (!table.isPresent()) {
+                // TODO: AA: handle negotiation scenario - when parsing failed
+            }
 
             document.deleteString(range.getStartOffset(), range.getEndOffset());
 
             // TODO: AA: calculate indent
-            document.insertString(range.getStartOffset(), table.format(2));
+            document.insertString(range.getStartOffset(), table.get().format(6));
 
             caret.moveToOffset(range.getStartOffset());
             editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
