@@ -2,8 +2,9 @@ package sbl.gherkin;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
 
 public class GherkinTable {
     private static final String COMMENT_MARK = "#";
@@ -19,15 +20,24 @@ public class GherkinTable {
         rebuild(table);
     }
 
+    public String format() {
+        return format(0);
+    }
+
     public String format(int indent) {
+        assert indent >= 0;
+
         StringBuilder sb = new StringBuilder();
 
-        for (String[] row : _table) {
-            sb.append(String.format("%" + indent + "s", "|"));
-            for (int i = 0; i < _columnsCount; i++) {
-                sb.append(String.format(" %-" + _columnsWidths[i] + "s |", row[i]));
+        for (int i = 0; i < _table.size(); i++) {
+            String format = indent == 0 ? "%s" : "%" + indent + "s";
+            sb.append(String.format(format, "|"));
+            for (int j = 0; j < _columnsCount; j++) {
+                sb.append(String.format(" %-" + _columnsWidths[j] + "s |", _table.get(i)[j]));
             }
-            sb.append(System.lineSeparator());
+            if (i != _table.size() - 1) {
+                sb.append(System.lineSeparator());
+            }
         }
 
         return sb.toString();
@@ -51,32 +61,27 @@ public class GherkinTable {
     }
 
     public static Optional<GherkinTable> tryParse(String text) {
-        Stream<String> rows = Stream.of(text.split(LINE_SEPARATOR_REGEX))
-                .map(r -> r.trim())
-                .filter(r -> !r.startsWith(COMMENT_MARK));
-
-        if (!rows.allMatch(r -> r.startsWith(CELL_SEPARATOR) && r.endsWith(CELL_SEPARATOR))) {
+        if (!getRows(text).allMatch(r -> r.startsWith(CELL_SEPARATOR) && r.endsWith(CELL_SEPARATOR))) {
             return Optional.empty();
         }
 
-        Stream<String[]> table = rows.map(r -> r.substring(1, r.length() - 2))
+        if (getTable(text).mapToInt(r -> r.length).distinct().count() != 1) {
+            return Optional.empty();
+        }
+
+        return Optional.of(new GherkinTable(getTable(text).collect(toList())));
+    }
+
+    private static Stream<String> getRows(String text) {
+        return Stream.of(text.split(LINE_SEPARATOR_REGEX))
+                .map(r -> r.trim())
+                .filter(r -> !r.startsWith(COMMENT_MARK));
+    }
+
+    private static Stream<String[]> getTable(String text) {
+        return getRows(text).map(r -> r.substring(1, r.length() - 1))
                 .map(r -> Stream.of(r.split(CELL_SEPARATOR_REGEX))
                         .map(x -> x.trim())
                         .toArray(size -> new String[size]));
-
-        if (table.mapToInt(r -> r.length).distinct().count() != 1) {
-            return Optional.empty();
-        }
-
-        return Optional.of(new GherkinTable(table.collect(Collectors.toList())));
-    }
-
-    private static String repeat(String source, int count) {
-        StringBuilder sb = new StringBuilder(source.length() * count);
-        for (int i = 0; i < count; i++) {
-            sb.append(source);
-        }
-
-        return sb.toString();
     }
 }
