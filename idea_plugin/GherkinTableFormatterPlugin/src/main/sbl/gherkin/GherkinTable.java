@@ -20,6 +20,9 @@ public class GherkinTable {
         rebuild(table);
     }
 
+    public void transpose() {
+    }
+
     public String format() {
         return format(0);
     }

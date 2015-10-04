@@ -38,7 +38,13 @@
     <action id="Gherkin.FormatTable"
             class="sbl.gherkin.FormatTableAction"
             text="Format Gherkin table">
-      <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="EditorToggleColumnMode"/>
+      <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="EditorToggleColumnMode" />
+    </action>
+
+    <action id="Gherkin.TransposeTable"
+            class="sbl.gherkin.TransposeTableAction"
+            text="Transpose Gherkin table">
+      <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="Gherkin.FormatTableAction" />
     </action>
   </actions>
 
