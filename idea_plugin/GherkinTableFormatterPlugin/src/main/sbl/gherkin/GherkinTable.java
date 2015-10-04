@@ -8,11 +8,12 @@ import java.util.stream.Stream;
 import static java.util.stream.Collectors.toList;
 
 public class GherkinTable {
+    public static final String CELL_SEPARATOR = "|";
+
     private static final String COMMENT_MARK = "#";
     private static final String LINE_SEPARATOR_REGEX = "\r?\n";
     private static final String LINE_SEPARATOR = "\n";
     private static final String CELL_SEPARATOR_REGEX = "\\|";
-    private static final String CELL_SEPARATOR = "|";
 
     private List<String[]> _table = null;
     private int _columnsCount = -1;
@@ -84,7 +85,7 @@ public class GherkinTable {
 
     private static Stream<String[]> getTable(String text) {
         return getRows(text).map(r -> r.substring(1, r.length() - 1))
-                .map(r -> Stream.of(r.split(CELL_SEPARATOR_REGEX))
+                .map(r -> Stream.of(r.split(CELL_SEPARATOR_REGEX, -1))
                         .map(x -> x.trim())
                         .toArray(size -> new String[size]));
     }

@@ -34,18 +34,17 @@
   </project-components>
 
   <actions>
-    <!-- Add your actions here -->
-    <action id="Gherkin.FormatTable"
-            class="sbl.gherkin.FormatTableAction"
-            text="Format Gherkin table">
-      <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="EditorToggleColumnMode" />
-    </action>
+    <group id="Gherking Table Formatter">
+      <add-to-group group-id="EditorPopupMenu" anchor="last"/>
 
-    <action id="Gherkin.TransposeTable"
-            class="sbl.gherkin.TransposeTableAction"
-            text="Transpose Gherkin table">
-      <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="Gherkin.FormatTableAction" />
-    </action>
+      <action id="Gherkin.FormatTable"
+              class="sbl.gherkin.FormatTableAction"
+              text="Format Gherkin table"/>
+
+      <action id="Gherkin.TransposeTable"
+              class="sbl.gherkin.TransposeTableAction"
+              text="Transpose Gherkin table"/>
+    </group>
   </actions>
 
 </idea-plugin>

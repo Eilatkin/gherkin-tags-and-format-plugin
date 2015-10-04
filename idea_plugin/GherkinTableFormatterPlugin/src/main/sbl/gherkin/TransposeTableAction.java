@@ -23,12 +23,8 @@ public class TransposeTableAction extends BaseGherkinTableAction {
                 // TODO: AA: handle negotiation scenario - when parsing failed
             }
 
-            GherkinTable gherkinTable = table.get();
-            gherkinTable.transpose();
-
-            // TODO: AA: calculate indent
-
-            return gherkinTable.format();
+            int indent = text.indexOf(GherkinTable.CELL_SEPARATOR);
+            return table.get().transpose().format(indent);
         }
     }
 }
