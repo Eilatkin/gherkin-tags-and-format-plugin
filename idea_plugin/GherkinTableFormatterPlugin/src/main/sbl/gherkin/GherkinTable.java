@@ -1,5 +1,6 @@
 package sbl.gherkin;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -9,6 +10,7 @@ import static java.util.stream.Collectors.toList;
 public class GherkinTable {
     private static final String COMMENT_MARK = "#";
     private static final String LINE_SEPARATOR_REGEX = "\r?\n";
+    private static final String LINE_SEPARATOR = "\n";
     private static final String CELL_SEPARATOR_REGEX = "\\|";
     private static final String CELL_SEPARATOR = "|";
 
@@ -17,10 +19,22 @@ public class GherkinTable {
     private int[] _columnsWidths;
 
     private GherkinTable(List<String[]> table) {
-        rebuild(table);
+        _table = table;
+        _columnsCount = _table.get(0).length;
+        _columnsWidths = new int[_columnsCount];
+
+        for(int i = 0; i < _columnsCount; i++) {
+            _columnsWidths[i] = getColumn(i).mapToInt(x -> x.length()).max().getAsInt();
+        }
     }
 
-    public void transpose() {
+    public GherkinTable transpose() {
+        List<String[]> transposed = new ArrayList<>(_columnsCount);
+        for(int i = 0; i < _columnsCount; i++) {
+            transposed.add(getColumn(i).toArray(size -> new String[size]));
+        }
+
+        return new GherkinTable(transposed);
     }
 
     public String format() {
@@ -39,28 +53,15 @@ public class GherkinTable {
                 sb.append(String.format(" %-" + _columnsWidths[j] + "s |", _table.get(i)[j]));
             }
             if (i != _table.size() - 1) {
-                sb.append(System.lineSeparator());
+                sb.append(LINE_SEPARATOR);
             }
         }
 
         return sb.toString();
     }
 
-    // TODO: AA: add transpose method
-
     private Stream<String> getColumn(int index) {
         return _table.stream().map(row -> row[index]);
-    }
-
-    private void rebuild(List<String[]> table) {
-        _table = table;
-
-        _columnsCount = _table.get(0).length;
-        _columnsWidths = new int[_columnsCount];
-
-        for(int i = 0; i < _columnsCount; i++) {
-            _columnsWidths[i] = getColumn(i).mapToInt(x -> x.length()).max().getAsInt();
-        }
     }
 
     public static Optional<GherkinTable> tryParse(String text) {
