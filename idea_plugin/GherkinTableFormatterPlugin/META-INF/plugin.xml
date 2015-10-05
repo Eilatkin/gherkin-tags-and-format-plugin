@@ -1,8 +1,8 @@
 <idea-plugin version="2">
   <id>sbl.gherkin.formatter</id>
   <name>Gherkin Table formatter</name>
-  <version>0.1</version>
-  <vendor email="artem.avdosev@gmail.com" url="https://github.com/artavd">Artem Avdosev</vendor>
+  <version>1.0</version>
+  <vendor email="artem.avdosev@gmail.com" url="https://github.com/artavd/Gherkin">Artem Avdosev</vendor>
 
   <description><![CDATA[
       Plugin for improvement of Gherkin (Cucumber) usage with IntelliJ IDEA.<br/>
@@ -39,11 +39,15 @@
 
       <action id="Gherkin.FormatTable"
               class="sbl.gherkin.FormatTableAction"
-              text="Format Gherkin table"/>
+              text="Format Gherkin table">
+        <keyboard-shortcut first-keystroke="control BACK_SLASH" keymap="$default"/>
+      </action>
 
       <action id="Gherkin.TransposeTable"
               class="sbl.gherkin.TransposeTableAction"
-              text="Transpose Gherkin table"/>
+              text="Transpose Gherkin table">
+        <keyboard-shortcut first-keystroke="control shift BACK_SLASH" keymap="$default"/>
+      </action>
     </group>
   </actions>
 
