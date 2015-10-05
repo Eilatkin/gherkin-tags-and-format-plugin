@@ -8,10 +8,7 @@ import com.intellij.openapi.editor.ScrollType;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.util.TextRange;
 
-/**
- * Created by Artem Avdosev on 04.10.2015.
- */
- abstract class BaseReplaceTextActionHandler extends EditorWriteActionHandler {
+abstract class BaseReplaceTextActionHandler extends EditorWriteActionHandler {
 
     @Override
     public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
@@ -31,5 +28,5 @@ import com.intellij.openapi.util.TextRange;
         editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
     }
 
-    protected abstract String process(String text);
+    abstract String process(String text);
 }

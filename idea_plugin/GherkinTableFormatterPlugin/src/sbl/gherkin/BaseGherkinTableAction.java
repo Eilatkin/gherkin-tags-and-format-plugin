@@ -9,7 +9,7 @@ import com.intellij.openapi.util.TextRange;
 
 abstract class BaseGherkinTableAction extends EditorAction {
 
-    protected BaseGherkinTableAction(EditorActionHandler defaultHandler) { super(defaultHandler); }
+    BaseGherkinTableAction(EditorActionHandler defaultHandler) { super(defaultHandler); }
 
     @Override
     public void update(Editor editor, Presentation presentation, DataContext dataContext) {

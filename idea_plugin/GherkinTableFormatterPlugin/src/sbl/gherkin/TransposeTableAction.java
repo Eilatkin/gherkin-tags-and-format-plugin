@@ -4,27 +4,27 @@ import com.intellij.openapi.editor.actionSystem.EditorActionHandler;
 
 import java.util.Optional;
 
-public class FormatTableAction extends BaseGherkinTableAction {
+public final class TransposeTableAction extends BaseGherkinTableAction {
 
-    public FormatTableAction(EditorActionHandler defaultHandler) {
+    public TransposeTableAction(EditorActionHandler defaultHandler) {
         super(defaultHandler);
     }
 
-    public FormatTableAction() {
-        this(new FormatHandler());
+    public TransposeTableAction() {
+        this(new TransposeHandler());
     }
 
-    private static class FormatHandler extends BaseReplaceTextActionHandler {
+    private static class TransposeHandler extends BaseReplaceTextActionHandler {
 
         @Override
-        public String process(String text) {
+        protected String process(String text) {
             Optional<GherkinTable> table = GherkinTable.tryParse(text);
             if (!table.isPresent()) {
                 // TODO: AA: handle negotiation scenario - when parsing failed
             }
 
             int indent = text.indexOf(GherkinTable.CELL_SEPARATOR);
-            return table.get().format(indent);
+            return table.get().transpose().format(indent);
         }
     }
 }

@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
 
-public class GherkinTable {
+final class GherkinTable {
     public static final String CELL_SEPARATOR = "|";
 
     private static final String COMMENT_MARK = "#";

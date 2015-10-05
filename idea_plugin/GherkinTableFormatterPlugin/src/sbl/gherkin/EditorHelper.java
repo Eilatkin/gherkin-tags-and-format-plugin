@@ -5,7 +5,7 @@ import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
 import com.intellij.openapi.util.TextRange;
 
-public final class EditorHelper {
+final class EditorHelper {
 
     public static TextRange getSelectedLines(Editor editor) {
         Document document = editor.getDocument();
