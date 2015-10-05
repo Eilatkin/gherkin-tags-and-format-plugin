@@ -19,12 +19,15 @@ abstract class BaseReplaceTextActionHandler extends EditorWriteActionHandler {
         }
 
         TextRange range = EditorHelper.getSelectedLines(editor);
-        String tableText = EditorHelper.getTextForRange(editor, range);
+        String replaced = EditorHelper.getTextForRange(editor, range);
 
-        document.deleteString(range.getStartOffset(), range.getEndOffset());
-        document.insertString(range.getStartOffset(), process(tableText));
+        String replacing = process(replaced);
 
-        editor.getCaretModel().moveToOffset(range.getStartOffset());
+        int start = range.getStartOffset(), end = range.getEndOffset();
+        document.deleteString(start, end);
+        document.insertString(start, replacing);
+
+        editor.getSelectionModel().setSelection(start, start + replacing.length());
         editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
     }
 
