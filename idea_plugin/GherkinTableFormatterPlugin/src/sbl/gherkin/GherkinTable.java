@@ -25,7 +25,8 @@ final class GherkinTable {
         _columnsWidths = new int[_columnsCount];
 
         for(int i = 0; i < _columnsCount; i++) {
-            _columnsWidths[i] = getColumn(i).mapToInt(x -> x.length()).max().getAsInt();
+            int width = getColumn(i).mapToInt(x -> x.length()).max().getAsInt();
+            _columnsWidths[i] = width == 0 ? 1 : width;
         }
     }
 

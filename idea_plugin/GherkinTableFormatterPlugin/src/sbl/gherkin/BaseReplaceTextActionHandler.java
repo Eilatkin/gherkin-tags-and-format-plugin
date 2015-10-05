@@ -24,7 +24,7 @@ abstract class BaseReplaceTextActionHandler extends EditorWriteActionHandler {
         document.deleteString(range.getStartOffset(), range.getEndOffset());
         document.insertString(range.getStartOffset(), process(tableText));
 
-        caret.moveToOffset(range.getStartOffset());
+        editor.getCaretModel().moveToOffset(range.getStartOffset());
         editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
     }
 
