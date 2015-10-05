@@ -49,7 +49,7 @@ final class GherkinTable {
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < _table.size(); i++) {
-            String format = indent == 0 ? "%s" : "%" + indent + "s";
+            String format = indent == 0 ? "%s" : "%" + (indent+1) + "s";
             sb.append(String.format(format, "|"));
             for (int j = 0; j < _columnsCount; j++) {
                 sb.append(String.format(" %-" + _columnsWidths[j] + "s |", _table.get(i)[j]));
