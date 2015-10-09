@@ -14,6 +14,7 @@ final class GherkinTable {
     private static final String LINE_SEPARATOR_REGEX = "\r?\n";
     private static final String LINE_SEPARATOR = "\n";
     private static final String CELL_SEPARATOR_REGEX = "\\|";
+    private static final String EMPTY_CELL = " ";
 
     private List<String[]> _table = null;
     private int _columnsCount = -1;
@@ -25,7 +26,7 @@ final class GherkinTable {
         _columnsWidths = new int[_columnsCount];
 
         for(int i = 0; i < _columnsCount; i++) {
-            int width = getColumn(i).mapToInt(x -> x.length()).max().getAsInt();
+            int width = getColumn(i).mapToInt(String::length).max().getAsInt();
             _columnsWidths[i] = width == 0 ? 1 : width;
         }
     }
@@ -33,7 +34,7 @@ final class GherkinTable {
     public GherkinTable transpose() {
         List<String[]> transposed = new ArrayList<>(_columnsCount);
         for(int i = 0; i < _columnsCount; i++) {
-            transposed.add(getColumn(i).toArray(size -> new String[size]));
+            transposed.add(getColumn(i).toArray(String[]::new));
         }
 
         return new GherkinTable(transposed);
@@ -52,7 +53,7 @@ final class GherkinTable {
             String format = indent == 0 ? "%s" : "%" + (indent+1) + "s";
             sb.append(String.format(format, "|"));
             for (int j = 0; j < _columnsCount; j++) {
-                sb.append(String.format(" %-" + _columnsWidths[j] + "s |", _table.get(i)[j]));
+                sb.append(String.format(" %-" + _columnsWidths[j] + "s |", getValue(_table.get(i), j)));
             }
             if (i != _table.size() - 1) {
                 sb.append(LINE_SEPARATOR);
@@ -63,15 +64,15 @@ final class GherkinTable {
     }
 
     private Stream<String> getColumn(int index) {
-        return _table.stream().map(row -> row[index]);
+        return _table.stream().map(row -> getValue(row, index));
+    }
+
+    private String getValue(String[] row, int index) {
+        return index < row.length ? row[index] : EMPTY_CELL;
     }
 
     public static Optional<GherkinTable> tryParse(String text) {
         if (!getRows(text).allMatch(r -> r.startsWith(CELL_SEPARATOR) && r.endsWith(CELL_SEPARATOR))) {
-            return Optional.empty();
-        }
-
-        if (getTable(text).mapToInt(r -> r.length).distinct().count() != 1) {
             return Optional.empty();
         }
 
@@ -80,14 +81,14 @@ final class GherkinTable {
 
     private static Stream<String> getRows(String text) {
         return Stream.of(text.split(LINE_SEPARATOR_REGEX))
-                .map(r -> r.trim())
+                .map(String::trim)
                 .filter(r -> !r.startsWith(COMMENT_MARK));
     }
 
     private static Stream<String[]> getTable(String text) {
         return getRows(text).map(r -> r.substring(1, r.length() - 1))
                 .map(r -> Stream.of(r.split(CELL_SEPARATOR_REGEX, -1))
-                        .map(x -> x.trim())
-                        .toArray(size -> new String[size]));
+                        .map(String::trim)
+                        .toArray(String[]::new));
     }
 }
