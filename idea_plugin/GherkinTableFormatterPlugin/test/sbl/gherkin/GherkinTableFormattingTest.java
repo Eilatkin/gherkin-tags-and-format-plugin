@@ -1,5 +1,6 @@
 package sbl.gherkin;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -10,7 +11,7 @@ import java.util.Optional;
 import static java.util.Arrays.asList;
 
 @RunWith(Parameterized.class)
-public class GherkinTableFormattingTest {
+public class GherkinTableFormattingTest extends Assert {
 
     private String _source;
     private String _formatted;
@@ -24,8 +25,8 @@ public class GherkinTableFormattingTest {
     public void testFormatting() {
         Optional<GherkinTable> table = GherkinTable.tryParse(_source);
 
-        assert table.isPresent();
-        assert table.get().format().equals(_formatted);
+        assertTrue(table.isPresent());
+        assertEquals(table.get().format(), _formatted);
     }
 
     @Parameterized.Parameters
@@ -55,6 +56,15 @@ public class GherkinTableFormattingTest {
                 {
                         "| Column1 |\"Column2\"        | Column3 | | Column   5 |\n" +
                         "| Value1|               | v2|\n" +
+                        "|v6         | v7 |v8|value     9         |",
+
+                        "| Column1 | \"Column2\" | Column3 |             | Column   5 |\n" +
+                        "| Value1  |           | v2      |             |            |\n" +
+                        "| v6      | v7        | v8      | value     9 |            |"
+                },
+                {
+                        "| Column1 |\"Column2\"        | Column3 | | Column   5 |\n" +
+                        "| Value1|               | v2\n" +
                         "|v6         | v7 |v8|value     9         |",
 
                         "| Column1 | \"Column2\" | Column3 |             | Column   5 |\n" +
