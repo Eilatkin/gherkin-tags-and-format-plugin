@@ -11,17 +11,15 @@ public final class FormatTableAction extends BaseGherkinTableAction {
     }
 
     public FormatTableAction() {
-        this(new FormatHandler());
+        this(new ActionHandler());
     }
 
-    private static class FormatHandler extends BaseReplaceTextActionHandler {
+    private static class ActionHandler extends BaseGherkinTableActionHandler {
 
         @Override
-        public String process(String text) {
+        public String processText(String text) {
             Optional<GherkinTable> table = GherkinTable.tryParse(text);
-            if (!table.isPresent()) {
-                // TODO: AA: handle negotiation scenario - when parsing failed
-            }
+            assert table.isPresent();
 
             int indent = text.indexOf(GherkinTable.CELL_SEPARATOR);
             return table.get().format(indent);

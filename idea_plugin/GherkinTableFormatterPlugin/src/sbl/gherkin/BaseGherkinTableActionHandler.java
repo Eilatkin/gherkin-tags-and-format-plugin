@@ -7,7 +7,7 @@ import com.intellij.openapi.util.TextRange;
 
 import java.util.List;
 
-abstract class BaseReplaceTextActionHandler extends EditorWriteActionHandler {
+abstract class BaseGherkinTableActionHandler extends EditorWriteActionHandler {
 
     @Override
     public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
@@ -21,7 +21,11 @@ abstract class BaseReplaceTextActionHandler extends EditorWriteActionHandler {
 
         TextRange range = EditorHelper.findTable(editor);
         String replaced = document.getText(range);
-        String replacing = process(replaced);
+        String replacing = processText(replaced);
+
+        if (replacing.equals(replaced)) {
+            return;
+        }
 
         int start = range.getStartOffset(), end = range.getEndOffset();
         document.deleteString(start, end);
@@ -30,5 +34,5 @@ abstract class BaseReplaceTextActionHandler extends EditorWriteActionHandler {
         editor.getCaretModel().setCaretsAndSelections(caretsBefore);
     }
 
-    abstract String process(String text);
+    abstract String processText(String text);
 }

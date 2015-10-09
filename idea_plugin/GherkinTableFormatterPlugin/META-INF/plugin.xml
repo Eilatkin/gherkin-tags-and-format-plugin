@@ -48,6 +48,12 @@
               text="Transpose Gherkin table">
         <keyboard-shortcut first-keystroke="control shift BACK_SLASH" keymap="$default"/>
       </action>
+
+      <action id="Gherkin.SelectTable"
+              class="sbl.gherkin.SelectTableAction"
+              text="Select Gherkin table">
+        <keyboard-shortcut first-keystroke="control alt BACK_SLASH" keymap="$default"/>
+      </action>
     </group>
   </actions>
 

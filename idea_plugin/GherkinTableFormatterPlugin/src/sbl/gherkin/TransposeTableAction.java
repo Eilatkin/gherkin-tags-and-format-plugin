@@ -11,17 +11,15 @@ public final class TransposeTableAction extends BaseGherkinTableAction {
     }
 
     public TransposeTableAction() {
-        this(new TransposeHandler());
+        this(new ActionHandler());
     }
 
-    private static class TransposeHandler extends BaseReplaceTextActionHandler {
+    private static class ActionHandler extends BaseGherkinTableActionHandler {
 
         @Override
-        protected String process(String text) {
+        protected String processText(String text) {
             Optional<GherkinTable> table = GherkinTable.tryParse(text);
-            if (!table.isPresent()) {
-                // TODO: AA: handle negotiation scenario - when parsing failed
-            }
+            assert table.isPresent();
 
             int indent = text.indexOf(GherkinTable.CELL_SEPARATOR);
             return table.get().transpose().format(indent);
