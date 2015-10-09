@@ -21,7 +21,7 @@ public class GherkinTableTransposingTest {
     }
 
     @Test
-    public void tryParseShouldParseTableCorrectly() {
+    public void testTransposing() {
         Optional<GherkinTable> table = GherkinTable.tryParse(_source);
 
         assert table.isPresent();
@@ -55,6 +55,17 @@ public class GherkinTableTransposingTest {
                         "| Column3    | v2     | v8          |\n" +
                         "|            | v3     | value     9 |\n" +
                         "| Column   5 | v4     |             |"
+                },
+                {
+                        "| Column1 |\"Column2\"        | Column3 | | Column   5 |\n" +
+                        "| Value1|               | v2|\n" +
+                        "|v6         | v7 |v8|value     9         |",
+
+                        "| Column1    | Value1 | v6          |\n" +
+                        "| \"Column2\"  |        | v7          |\n" +
+                        "| Column3    | v2     | v8          |\n" +
+                        "|            |        | value     9 |\n" +
+                        "| Column   5 |        |             |"
                 }
         });
     }

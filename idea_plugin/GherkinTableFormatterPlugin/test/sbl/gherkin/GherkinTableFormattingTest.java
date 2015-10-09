@@ -21,7 +21,7 @@ public class GherkinTableFormattingTest {
     }
 
     @Test
-    public void tryParseShouldParseTableCorrectly() {
+    public void testFormatting() {
         Optional<GherkinTable> table = GherkinTable.tryParse(_source);
 
         assert table.isPresent();
@@ -50,6 +50,15 @@ public class GherkinTableFormattingTest {
 
                         "| Column1 | \"Column2\" | Column3 |             | Column   5 |\n" +
                         "| Value1  |           | v2      | v3          | v4         |\n" +
+                        "| v6      | v7        | v8      | value     9 |            |"
+                },
+                {
+                        "| Column1 |\"Column2\"        | Column3 | | Column   5 |\n" +
+                        "| Value1|               | v2|\n" +
+                        "|v6         | v7 |v8|value     9         |",
+
+                        "| Column1 | \"Column2\" | Column3 |             | Column   5 |\n" +
+                        "| Value1  |           | v2      |             |            |\n" +
                         "| v6      | v7        | v8      | value     9 |            |"
                 }
         });
