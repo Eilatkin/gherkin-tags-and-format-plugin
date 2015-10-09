@@ -1,5 +1,7 @@
 package sbl.gherkin;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -63,6 +65,11 @@ final class GherkinTable {
         return sb.toString();
     }
 
+    @Override
+    public String toString() {
+        return format();
+    }
+
     private Stream<String> getColumn(int index) {
         return _table.stream().map(row -> getValue(row, index));
     }
@@ -71,8 +78,16 @@ final class GherkinTable {
         return index < row.length ? row[index] : EMPTY_CELL;
     }
 
+    public static boolean isTableRow(String row) {
+        return StringUtils.stripToEmpty(row).startsWith(CELL_SEPARATOR);
+    }
+
+    public static boolean isIgnoredText(String text) {
+        return StringUtils.isBlank(text) || StringUtils.stripToEmpty(text).startsWith(COMMENT_MARK);
+    }
+
     public static Optional<GherkinTable> tryParse(String text) {
-        if (!getRows(text).allMatch(r -> r.startsWith(CELL_SEPARATOR) && r.endsWith(CELL_SEPARATOR))) {
+        if (!getRows(text).allMatch(r -> isTableRow(r) || isIgnoredText(r))) {
             return Optional.empty();
         }
 
@@ -81,14 +96,14 @@ final class GherkinTable {
 
     private static Stream<String> getRows(String text) {
         return Stream.of(text.split(LINE_SEPARATOR_REGEX))
-                .map(String::trim)
+                .map(StringUtils::strip)
                 .filter(r -> !r.startsWith(COMMENT_MARK));
     }
 
     private static Stream<String[]> getTable(String text) {
-        return getRows(text).map(r -> r.substring(1, r.length() - 1))
+        return getRows(text).map(r -> StringUtils.strip(r, CELL_SEPARATOR))
                 .map(r -> Stream.of(r.split(CELL_SEPARATOR_REGEX, -1))
-                        .map(String::trim)
+                        .map(StringUtils::strip)
                         .toArray(String[]::new));
     }
 }
