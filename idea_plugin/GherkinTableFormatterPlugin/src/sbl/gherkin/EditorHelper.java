@@ -2,24 +2,36 @@ package sbl.gherkin;
 
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.SelectionModel;
+import com.intellij.openapi.editor.LogicalPosition;
 import com.intellij.openapi.util.TextRange;
 
 final class EditorHelper {
 
-    public static TextRange getSelectedLines(Editor editor) {
+    public static TextRange findTable(Editor editor) {
+        LogicalPosition cursor = editor.getCaretModel().getLogicalPosition();
         Document document = editor.getDocument();
-        SelectionModel selection = editor.getSelectionModel();
 
-        TextRange charsRange = new TextRange(selection.getSelectionStart(), selection.getSelectionEnd());
-        TextRange linesRange = new TextRange(document.getLineNumber(charsRange.getStartOffset()), document.getLineNumber(charsRange.getEndOffset()));
-        TextRange linesBlock = new TextRange(document.getLineStartOffset(linesRange.getStartOffset()), document.getLineEndOffset(linesRange.getEndOffset()));
+        int startLine = -1;
+        for (int line = cursor.line; line >= 0 &&
+                GherkinTable.isSuitableText(getLineText(document, line)); line--) {
+            startLine = line;
+        }
 
-        return linesBlock;
+        int endLine = -1;
+        for (int line = cursor.line; line < document.getLineCount() &&
+                GherkinTable.isSuitableText(getLineText(document, line)); line++) {
+            endLine = line;
+        }
+
+        if (startLine == -1 || endLine == -1) {
+            return TextRange.EMPTY_RANGE;
+        }
+
+        return TextRange.create(document.getLineStartOffset(startLine), document.getLineEndOffset(endLine));
     }
 
-    public static String getTextForRange(Editor editor, TextRange range) {
-        Document document = editor.getDocument();
-        return document.getText().substring(range.getStartOffset(), range.getEndOffset());
+    private static String getLineText(Document document, int lineNumber) {
+        TextRange range = new TextRange(document.getLineStartOffset(lineNumber), document.getLineEndOffset(lineNumber));
+        return document.getText(range);
     }
 }

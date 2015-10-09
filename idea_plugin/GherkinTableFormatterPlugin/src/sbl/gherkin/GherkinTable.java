@@ -86,12 +86,21 @@ final class GherkinTable {
         return StringUtils.isBlank(text) || StringUtils.stripToEmpty(text).startsWith(COMMENT_MARK);
     }
 
+    public static boolean isSuitableText(String text) {
+        return isTableRow(text) || isIgnoredText(text);
+    }
+
     public static Optional<GherkinTable> tryParse(String text) {
-        if (!getRows(text).allMatch(r -> isTableRow(r) || isIgnoredText(r))) {
+        if (!getRows(text).allMatch(GherkinTable::isSuitableText)) {
             return Optional.empty();
         }
 
-        return Optional.of(new GherkinTable(getTable(text).collect(toList())));
+        List<String[]> rows = getTable(text).collect(toList());
+        if (rows.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(new GherkinTable(rows));
     }
 
     private static Stream<String> getRows(String text) {
@@ -101,7 +110,9 @@ final class GherkinTable {
     }
 
     private static Stream<String[]> getTable(String text) {
-        return getRows(text).map(r -> StringUtils.strip(r, CELL_SEPARATOR))
+        return getRows(text)
+                .filter(GherkinTable::isTableRow)
+                .map(r -> StringUtils.strip(r, CELL_SEPARATOR))
                 .map(r -> Stream.of(r.split(CELL_SEPARATOR_REGEX, -1))
                         .map(StringUtils::strip)
                         .toArray(String[]::new));

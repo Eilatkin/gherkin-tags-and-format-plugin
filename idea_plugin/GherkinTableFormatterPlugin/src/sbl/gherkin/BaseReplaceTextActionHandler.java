@@ -1,12 +1,11 @@
 package sbl.gherkin;
 
 import com.intellij.openapi.actionSystem.DataContext;
-import com.intellij.openapi.editor.Caret;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.Editor;
-import com.intellij.openapi.editor.ScrollType;
+import com.intellij.openapi.editor.*;
 import com.intellij.openapi.editor.actionSystem.EditorWriteActionHandler;
 import com.intellij.openapi.util.TextRange;
+
+import java.util.List;
 
 abstract class BaseReplaceTextActionHandler extends EditorWriteActionHandler {
 
@@ -14,21 +13,21 @@ abstract class BaseReplaceTextActionHandler extends EditorWriteActionHandler {
     public void executeWriteAction(Editor editor, Caret caret, DataContext dataContext) {
         Document document = editor.getDocument();
 
-        if (editor == null || document == null || !document.isWritable()) {
+        if (!document.isWritable()) {
             return;
         }
 
-        TextRange range = EditorHelper.getSelectedLines(editor);
-        String replaced = EditorHelper.getTextForRange(editor, range);
+        List<CaretState> caretsBefore = editor.getCaretModel().getCaretsAndSelections();
 
+        TextRange range = EditorHelper.findTable(editor);
+        String replaced = document.getText(range);
         String replacing = process(replaced);
 
         int start = range.getStartOffset(), end = range.getEndOffset();
         document.deleteString(start, end);
         document.insertString(start, replacing);
 
-        editor.getSelectionModel().setSelection(start, start + replacing.length());
-        editor.getScrollingModel().scrollToCaret(ScrollType.RELATIVE);
+        editor.getCaretModel().setCaretsAndSelections(caretsBefore);
     }
 
     abstract String process(String text);

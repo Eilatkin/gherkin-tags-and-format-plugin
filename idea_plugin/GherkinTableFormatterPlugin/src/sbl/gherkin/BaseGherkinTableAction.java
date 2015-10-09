@@ -15,8 +15,8 @@ abstract class BaseGherkinTableAction extends EditorAction {
     public void update(Editor editor, Presentation presentation, DataContext dataContext) {
         boolean isActionEnabled = false;
         if (editor.getDocument().isWritable()) {
-            TextRange range = EditorHelper.getSelectedLines(editor);
-            String text = EditorHelper.getTextForRange(editor, range);
+            TextRange range = EditorHelper.findTable(editor);
+            String text = editor.getDocument().getText(range);
 
             isActionEnabled = GherkinTable.tryParse(text).isPresent();
         }
