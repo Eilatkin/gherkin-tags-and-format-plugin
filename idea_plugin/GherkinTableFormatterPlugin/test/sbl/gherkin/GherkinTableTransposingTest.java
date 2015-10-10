@@ -26,7 +26,7 @@ public class GherkinTableTransposingTest extends Assert {
         Optional<GherkinTable> table = GherkinTable.tryParse(_source);
 
         assertTrue(table.isPresent());
-        assertEquals(table.get().transpose().format(), _formatted);
+        assertEquals(_formatted, table.get().transpose().format());
     }
 
     @Parameterized.Parameters
@@ -72,6 +72,21 @@ public class GherkinTableTransposingTest extends Assert {
                         "| Column1 |\"Column2\"        | Column3 | | Column   5\n" +
                         "| Value1|               | v2|\n" +
                         "|v6         | v7 |v8|value     9         ",
+
+                        "| Column1    | Value1 | v6          |\n" +
+                        "| \"Column2\"  |        | v7          |\n" +
+                        "| Column3    | v2     | v8          |\n" +
+                        "|            |        | value     9 |\n" +
+                        "| Column   5 |        |             |"
+                },
+                {
+                        "   \n" +
+                        "\n" +
+                        "# my super table\n" +
+                        "| Column1 |\"Column2\"        | Column3 | | Column   5 |\n" +
+                        "| Value1|               | v2\n" +
+                        "# third line of my super table\n" +
+                        "|v6         | v7 |v8|value     9         |",
 
                         "| Column1    | Value1 | v6          |\n" +
                         "| \"Column2\"  |        | v7          |\n" +
