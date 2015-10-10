@@ -5,6 +5,8 @@ import org.apache.commons.lang.StringUtils;
 import java.util.*;
 import java.util.stream.Stream;
 
+import static java.util.stream.Collectors.toList;
+
 final class GherkinTable {
     public static final String CELL_SEPARATOR = "|";
 
@@ -19,7 +21,6 @@ final class GherkinTable {
     private int _columnsCount = -1;
     private int[] _columnsWidths;
 
-    private GherkinTable(List<String[]> table) { this(table, null); }
     private GherkinTable(List<String[]> table, Map<Integer, List<String>> comments) {
         _table = table;
         _comments = comments;
@@ -38,7 +39,12 @@ final class GherkinTable {
             transposed.add(getColumn(i).toArray(String[]::new));
         }
 
-        return new GherkinTable(transposed);
+        List<String> allComments = _comments.values().stream()
+                .flatMap(Collection::stream)
+                .filter(GherkinTable::isComment)
+                .collect(toList());
+
+        return new GherkinTable(transposed, new HashMap<Integer, List<String>>() { { put(0, allComments); } });
     }
 
     public String format() {
@@ -50,13 +56,9 @@ final class GherkinTable {
 
         StringBuilder sb = new StringBuilder();
 
-        for (int i = 0; i <= _table.size(); i++) {
+        for (int i = 0; i < _table.size(); i++) {
             String format = indent == 0 ? "%s" : "%" + (indent+1) + "s";
             appendComments(sb, i, format);
-
-            if (i == _table.size()) {
-                break;
-            }
 
             sb.append(String.format(format, "|"));
             for (int j = 0; j < _columnsCount; j++) {
@@ -94,11 +96,8 @@ final class GherkinTable {
     public static boolean isTableRow(String row) {
         return StringUtils.stripToEmpty(row).startsWith(CELL_SEPARATOR);
     }
-
-    public static boolean isIgnoredText(String text) {
-        return StringUtils.isBlank(text) || StringUtils.stripToEmpty(text).startsWith(COMMENT_MARK);
-    }
-
+    public static boolean isComment(String text) { return StringUtils.stripToEmpty(text).startsWith(COMMENT_MARK); }
+    public static boolean isIgnoredText(String text) { return StringUtils.isBlank(text) || isComment(text); }
     public static boolean isSuitableText(String text) {
         return isTableRow(text) || isIgnoredText(text);
     }
@@ -109,21 +108,21 @@ final class GherkinTable {
         List<String[]> table = new ArrayList<>();
         Map<Integer, List<String>> ignored = new HashMap<>();
 
-        for (int i = 0; i < lines.length; i++) {
-            if (isTableRow(lines[i])) {
-                String stripped = StringUtils.strip(StringUtils.strip(lines[i]), CELL_SEPARATOR);
+        for (String line : lines) {
+            if (isTableRow(line)) {
+                String stripped = StringUtils.strip(StringUtils.strip(line), CELL_SEPARATOR);
                 String[] values = Stream.of(StringUtils.split(stripped, CELL_SEPARATOR_REGEX, -1))
                         .map(StringUtils::strip)
                         .toArray(String[]::new);
                 table.add(values);
             }
-            else if (isIgnoredText(lines[i])) {
+            else if (isIgnoredText(line)) {
                 int commentForLine = table.size();
                 if (!ignored.containsKey(commentForLine)) {
                     ignored.put(commentForLine, new ArrayList<>());
                 }
                 List<String> comments = ignored.get(commentForLine);
-                comments.add(lines[i]);
+                comments.add(line);
             }
             else {
                 return Optional.empty();

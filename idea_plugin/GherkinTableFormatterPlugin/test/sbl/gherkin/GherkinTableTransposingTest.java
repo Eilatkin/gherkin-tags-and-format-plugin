@@ -88,6 +88,8 @@ public class GherkinTableTransposingTest extends Assert {
                         "# third line of my super table\n" +
                         "|v6         | v7 |v8|value     9         |",
 
+                        "# my super table\n" +
+                        "# third line of my super table\n" +
                         "| Column1    | Value1 | v6          |\n" +
                         "| \"Column2\"  |        | v7          |\n" +
                         "| Column3    | v2     | v8          |\n" +

@@ -78,8 +78,7 @@ public class GherkinTableFormattingTest extends Assert {
                         "| Column1 |\"Column2\"        | Column3 | | Column   5 |\n" +
                         "| Value1|               | v2\n" +
                         "# third line of my super table\n" +
-                        "|v6         | v7 |v8|value     9         |\n" +
-                        "",
+                        "|v6         | v7 |v8|value     9         |",
 
                         "   \n" +
                         "\n" +
@@ -87,8 +86,7 @@ public class GherkinTableFormattingTest extends Assert {
                         "| Column1 | \"Column2\" | Column3 |             | Column   5 |\n" +
                         "| Value1  |           | v2      |             |            |\n" +
                         "# third line of my super table\n" +
-                        "| v6      | v7        | v8      | value     9 |            |\n" +
-                        ""
+                        "| v6      | v7        | v8      | value     9 |            |"
                 }
         });
     }
