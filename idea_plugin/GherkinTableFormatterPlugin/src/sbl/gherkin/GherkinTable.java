@@ -23,7 +23,7 @@ final class GherkinTable {
     private GherkinTable(List<String[]> table, Map<Integer, List<String>> comments) {
         _table = table;
         _comments = comments;
-        _columnsCount = _table.get(0).length;
+        _columnsCount = _table.stream().mapToInt(r -> r.length).max().getAsInt();
         _columnsWidths = new int[_columnsCount];
 
         for(int i = 0; i < _columnsCount; i++) {

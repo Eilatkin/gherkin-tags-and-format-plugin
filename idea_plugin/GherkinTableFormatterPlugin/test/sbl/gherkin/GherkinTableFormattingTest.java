@@ -63,13 +63,13 @@ public class GherkinTableFormattingTest extends Assert {
                         "| v6      | v7        | v8      | value     9 |            |"
                 },
                 {
-                        "| Column1 |\"Column2\"        | Column3 | | Column   5 |\n" +
+                        "| Column1 |\"Column2\"        | Column3 |\n" +
                         "| Value1|               | v2\n" +
-                        "|v6         | v7 |v8|value     9         |",
+                        "|v6         | v7 |v8|value     9         |10|",
 
-                        "| Column1 | \"Column2\" | Column3 |             | Column   5 |\n" +
-                        "| Value1  |           | v2      |             |            |\n" +
-                        "| v6      | v7        | v8      | value     9 |            |"
+                        "| Column1 | \"Column2\" | Column3 |             |    |\n" +
+                        "| Value1  |           | v2      |             |    |\n" +
+                        "| v6      | v7        | v8      | value     9 | 10 |"
                 },
                 {
                         "   \n" +
