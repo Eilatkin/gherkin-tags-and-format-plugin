@@ -26,7 +26,7 @@ public class GherkinTableFormattingTest extends Assert {
         Optional<GherkinTable> table = GherkinTable.tryParse(_source);
 
         assertTrue(table.isPresent());
-        assertEquals(table.get().format(), _formatted);
+        assertEquals(_formatted, table.get().format());
     }
 
     @Parameterized.Parameters
@@ -63,12 +63,29 @@ public class GherkinTableFormattingTest extends Assert {
                         "| v6      | v7        | v8      | value     9 |            |"
                 },
                 {
+                        "| Column1 |\"Column2\"        | Column3 |\n" +
+                        "| Value1|               | v2\n" +
+                        "|v6         | v7 |v8|value     9         |10|",
+
+                        "| Column1 | \"Column2\" | Column3 |             |    |\n" +
+                        "| Value1  |           | v2      |             |    |\n" +
+                        "| v6      | v7        | v8      | value     9 | 10 |"
+                },
+                {
+                        "   \n" +
+                        "\n" +
+                        "# my super table\n" +
                         "| Column1 |\"Column2\"        | Column3 | | Column   5 |\n" +
                         "| Value1|               | v2\n" +
+                        "# third line of my super table\n" +
                         "|v6         | v7 |v8|value     9         |",
 
+                        "   \n" +
+                        "\n" +
+                        "# my super table\n" +
                         "| Column1 | \"Column2\" | Column3 |             | Column   5 |\n" +
                         "| Value1  |           | v2      |             |            |\n" +
+                        "# third line of my super table\n" +
                         "| v6      | v7        | v8      | value     9 |            |"
                 }
         });

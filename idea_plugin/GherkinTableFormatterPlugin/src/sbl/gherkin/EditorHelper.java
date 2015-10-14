@@ -12,15 +12,27 @@ final class EditorHelper {
         Document document = editor.getDocument();
 
         int startLine = -1;
-        for (int line = cursor.line; line >= 0 &&
-                GherkinTable.isSuitableText(getLineText(document, line)); line--) {
-            startLine = line;
+        for (int line = cursor.line; line >= 0; line--) {
+            String text = getLineText(document, line);
+            if (!GherkinTable.isSuitableText(getLineText(document, line))) {
+                break;
+            }
+
+            if (GherkinTable.isTableRow(text)) {
+                startLine = line;
+            }
         }
 
         int endLine = -1;
-        for (int line = cursor.line; line < document.getLineCount() &&
-                GherkinTable.isSuitableText(getLineText(document, line)); line++) {
-            endLine = line;
+        for (int line = cursor.line; line < document.getLineCount(); line++) {
+            String text = getLineText(document, line);
+            if (!GherkinTable.isSuitableText(getLineText(document, line))) {
+                break;
+            }
+
+            if (GherkinTable.isTableRow(text)) {
+                endLine = line;
+            }
         }
 
         if (startLine == -1 || endLine == -1) {
