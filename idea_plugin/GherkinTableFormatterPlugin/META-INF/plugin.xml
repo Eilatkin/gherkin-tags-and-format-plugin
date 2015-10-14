@@ -1,7 +1,7 @@
 <idea-plugin version="2">
   <id>sbl.gherkin.formatter</id>
   <name>Gherkin Table formatter</name>
-  <version>1.0</version>
+  <version>1.1</version>
   <vendor email="artem.avdosev@gmail.com" url="https://github.com/artavd/Gherkin">Artem Avdosev</vendor>
 
   <description><![CDATA[
