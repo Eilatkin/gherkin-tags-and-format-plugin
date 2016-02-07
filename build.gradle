@@ -7,8 +7,4 @@ apply plugin: 'idea'
 
 intellij {
     version 'IC-15.0.3'
-    pluginName 'gherkin-table-formatter'
 }
-
-group 'sbl.gherkin'
-version '1.1'
