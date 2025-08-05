@@ -1,4 +1,4 @@
-package sbl.gherkin;
+package ru.eilatkin.gherkin;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -9,9 +9,8 @@ import static java.util.stream.Collectors.toList;
 
 final class GherkinTable {
     public static final String CELL_SEPARATOR = "|";
-
     private static final String COMMENT_MARK = "#";
-    private static final String LINE_SEPARATOR_REGEX = "\r?\n";
+    private static final String LINE_SEPARATOR_REGEX = "\n";
     private static final String LINE_SEPARATOR = "\n";
     private static final String CELL_SEPARATOR_REGEX = "\\|";
     private static final String EMPTY_CELL = " ";
@@ -98,8 +97,8 @@ final class GherkinTable {
     }
     public static boolean isComment(String text) { return StringUtils.stripToEmpty(text).startsWith(COMMENT_MARK); }
     public static boolean isIgnoredText(String text) { return StringUtils.isBlank(text) || isComment(text); }
-    public static boolean isSuitableText(String text) {
-        return isTableRow(text) || isIgnoredText(text);
+    public static boolean isNotSuitableText(String text) {
+        return !isTableRow(text) && !isIgnoredText(text);
     }
 
     public static Optional<GherkinTable> tryParse(String text) {

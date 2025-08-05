@@ -1,4 +1,4 @@
-package sbl.gherkin;
+package ru.eilatkin.gherkin;
 
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
@@ -14,7 +14,7 @@ final class EditorHelper {
         int startLine = -1;
         for (int line = cursor.line; line >= 0; line--) {
             String text = getLineText(document, line);
-            if (!GherkinTable.isSuitableText(getLineText(document, line))) {
+            if (GherkinTable.isNotSuitableText(getLineText(document, line))) {
                 break;
             }
 
@@ -26,7 +26,7 @@ final class EditorHelper {
         int endLine = -1;
         for (int line = cursor.line; line < document.getLineCount(); line++) {
             String text = getLineText(document, line);
-            if (!GherkinTable.isSuitableText(getLineText(document, line))) {
+            if (GherkinTable.isNotSuitableText(getLineText(document, line))) {
                 break;
             }
 

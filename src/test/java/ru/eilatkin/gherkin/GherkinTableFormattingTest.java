@@ -1,4 +1,4 @@
-package sbl.gherkin;
+package ru.eilatkin.gherkin;
 
 import org.junit.Assert;
 import org.junit.Test;

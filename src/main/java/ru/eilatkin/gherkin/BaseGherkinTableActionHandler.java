@@ -1,4 +1,4 @@
-package sbl.gherkin;
+package ru.eilatkin.gherkin;
 
 import com.intellij.openapi.actionSystem.DataContext;
 import com.intellij.openapi.editor.*;

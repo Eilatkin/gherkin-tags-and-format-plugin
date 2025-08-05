@@ -1,41 +1,41 @@
-<idea-plugin version="2">
-  <id>sbl.gherkin.formatter</id>
-  <name>Gherkin Table formatter</name>
-  <version>1.1</version>
-  <vendor email="artem.avdosev@gmail.com" url="https://github.com/artavd/gherkin-table-formatter-idea-plugin">Artem Avdosev</vendor>
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <id>ru.eilatkin.gherkin</id>
+    <name>Gherkin Tags and Format</name>
+    <vendor email="eilatkin@gmail.com" url="https://github.com/Eilatkin/gherkin-tags-and-format-plugin">Eilatkin</vendor>
 
-  <description><![CDATA[
-      Plugin for improvement of Gherkin (Cucumber) usage with IntelliJ IDEA.<br/>
-      It allows to format and transpose Gherkin tables.
-    ]]></description>
+    <depends>com.intellij.modules.platform</depends>
 
-  <change-notes><![CDATA[]]>
-  </change-notes>
+    <resource-bundle>messages.MyBundle</resource-bundle>
 
-  <idea-version since-build="131"/>
+    <actions>
+        <group id="Gherkin Tags and Format">
+            <add-to-group group-id="EditorPopupMenu" anchor="last"/>
 
-  <actions>
-    <group id="Gherking Table Formatter">
-      <add-to-group group-id="EditorPopupMenu" anchor="last"/>
+            <action id="Gherkin.GenerateTags"
+                    class="ru.eilatkin.gherkin.GenerateTagsAction"
+                    text="Сгенерировать Test IT теги">
+                 <keyboard-shortcut first-keystroke="control BACK_SLASH" keymap="$default"/>
+            </action>
 
-      <action id="Gherkin.FormatTable"
-              class="sbl.gherkin.FormatTableAction"
-              text="Format Gherkin table">
-        <keyboard-shortcut first-keystroke="control BACK_SLASH" keymap="$default"/>
-      </action>
+            <action id="Gherkin.FormatTable"
+                    class="ru.eilatkin.gherkin.FormatTableAction"
+                    text="Форматировать Gherkin-таблицу">
+                <keyboard-shortcut first-keystroke="alt BACK_SLASH" keymap="$default"/>
+            </action>
 
-      <action id="Gherkin.TransposeTable"
-              class="sbl.gherkin.TransposeTableAction"
-              text="Transpose Gherkin table">
-        <keyboard-shortcut first-keystroke="control shift BACK_SLASH" keymap="$default"/>
-      </action>
+            <action id="Gherkin.TransposeTable"
+                    class="ru.eilatkin.gherkin.TransposeTableAction"
+                    text="Транспонировать Gherkin-таблицу">
+<!--                <keyboard-shortcut first-keystroke="control shift BACK_SLASH" keymap="$default"/>-->
+            </action>
 
-      <action id="Gherkin.SelectTable"
-              class="sbl.gherkin.SelectTableAction"
-              text="Select Gherkin table">
-        <keyboard-shortcut first-keystroke="control alt BACK_SLASH" keymap="$default"/>
-      </action>
-    </group>
-  </actions>
+            <action id="Gherkin.SelectTable"
+                    class="ru.eilatkin.gherkin.SelectTableAction"
+                    text="Выделить Gherkin-таблицу">
+<!--                <keyboard-shortcut first-keystroke="control alt BACK_SLASH" keymap="$default"/>-->
+            </action>
 
+        </group>
+    </actions>
 </idea-plugin>

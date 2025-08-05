@@ -1,6 +1,4 @@
-.idea/
-.gradle/
-build/
-
-*.iml
-
+.gradle
+.idea
+.qodana
+build
